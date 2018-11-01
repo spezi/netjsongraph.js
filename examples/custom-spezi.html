@@ -5,10 +5,12 @@
     <meta charset="utf-8">
     <link href="../src/netjsongraph.css" rel="stylesheet">
     <!-- theme can be easily customized via css -->
-    <link href="../src/netjsongraph-theme.css" rel="stylesheet">
     <link href="../src/netjsongraph-theme-spezi.css" rel="stylesheet">
     <style>
-        body{ overflow: hidden }
+        body{
+          overflow: hidden;
+          background: #333;
+        }
         .wireless{ stroke: #669999 }				/* light green */
         .wireless_weak{ stroke: #ccccff }			/* light grey */
         .ethernet{ stroke: #00ff00; stroke-opacity: 0.7 }	/* glowing green */
@@ -63,8 +65,12 @@
         #legend .fiber{ border-color: #1f77b4 }
         #legend .vpn{ border-color: purple }
 
+        .njg-tooltip {
+          fill: #eee;
+        }
+
         .linkLabel {
-                color: #333333;
+                color: #eee;
                 flood-color: #FFFFFF;
                 flood-opacity:1;
                 font-size:10px;
@@ -92,9 +98,15 @@
             font-size:6px;
         }
 
+        .float_div {
+            position: relative;
+            float: left;
+            padding: 5px;
+        }
+
     </style>
 </head>
-<body>
+<body><!--
     <div id="legend">
         <p><span class="circle node">&nbsp;</span> ordinary node</p>
         <p><span class="circle gateway">&nbsp;</span> gateway node</p>
@@ -103,7 +115,7 @@
         <p><span class="link ethernet">&nbsp;</span> ethernet link</p>
         <p><span class="link fiber">&nbsp;</span> fiber link</p>
         <p><span class="link vpn">&nbsp;</span> vpn link</p>
-    </div>
+    </div>-->
     <script src="../lib/d3.min.js"></script>
     <script src="../src/netjsongraph.js"></script>
     <script>

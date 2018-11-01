@@ -217,17 +217,17 @@
             onClickNode: function(n) {
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
-                    html = "<p><b>id</b>: " + n.id + "</p>";
-                    if(n.label) { html += "<p><b>label</b>: " + n.label + "</p>"; }
+                    html = "<div class=\"float_div\"><b>id</b>: " + n.id + "</div>";
+                    if(n.label) { html += "<div class=\"float_div\"><b>label</b>: " + n.label + "</div>"; }
                     if(n.properties) {
                         for(var key in n.properties) {
                             if(!n.properties.hasOwnProperty(key)) { continue; }
-                            html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</p>";
+                            html += "<div class=\"float_div\"><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</div>";
                     }
                 }
-                if(n.linkCount) { html += "<p><b>links</b>: " + n.linkCount + "</p>"; }
+                if(n.linkCount) { html += "<div class=\"float_div\"><b>links</b>: " + n.linkCount + "</div>"; }
                 if(n.local_addresses) {
-                    html += "<p><b>local addresses</b>:<br>" + n.local_addresses.join('<br>') + "</p>";
+                    html += "<div class=\"float_div\"><b>local addresses</b>:<br>" + n.local_addresses.join('<br>') + "</div>";
                 }
                 overlayInner.html(html);
                 overlay.classed("njg-hidden", false);
@@ -245,14 +245,14 @@
             onClickLink: function(l) {
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
-                    html = "<p><b>source</b>: " + (l.source.label || l.source.id) + "</p>";
-                    html += "<p><b>target</b>: " + (l.target.label || l.target.id) + "</p>";
-                    html += "<p><b>label</b>: " + (l.label) + "</p>";
-                    html += "<p><b>cost</b>: " + l.cost + "</p>";
+                    html = "<div class=\"float_div\"><b>source</b>: " + (l.source.label || l.source.id) + "</div>";
+                    html += "<div class=\"float_div\"><b>target</b>: " + (l.target.label || l.target.id) + "</div>";
+                    html += "<div class=\"float_div\"><b>label</b>: " + (l.label) + "</div>";
+                    html += "<div class=\"float_div\"><b>cost</b>: " + l.cost + "</div>";
                 if(l.properties) {
                     for(var key in l.properties) {
                         if(!l.properties.hasOwnProperty(key)) { continue; }
-                        html += "<p><b>"+ key.replace(/_/g, " ") +"</b>: " + l.properties[key] + "</p>";
+                        html += "<div class=\"float_div\"><b>"+ key.replace(/_/g, " ") +"</b>: " + l.properties[key] + "</div>";
                     }
                 }
                 overlayInner.html(html);
@@ -416,7 +416,7 @@
                                    .append("g");
                     node = groups.append("circle")
                                  .attr("class", function (node) {
-                                   // Stroke vom node bunt 
+                                   // Stroke vom node bunt
                                    if ( node.properties.port_state == "up") {
                                        var addcolorClass = "class_green";
                                    }
@@ -532,7 +532,7 @@
                 }
                 // Metadata style
                 if(opts.metadata) {
-                    metadata.attr("class", "njg-metadata").style("display", "block");
+                    metadata.attr("class", "njg-metadata").style("display", "none");
                 }
 
                 var attrs = ["protocol",
