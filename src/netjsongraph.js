@@ -240,13 +240,14 @@
              * @function
              * @name onClickLink
              *
-             * Called when a node is clicked
+             * Called when a link is clicked
              */
             onClickLink: function(l) {
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
                     html = "<p><b>source</b>: " + (l.source.label || l.source.id) + "</p>";
                     html += "<p><b>target</b>: " + (l.target.label || l.target.id) + "</p>";
+                    html += "<p><b>label</b>: " + (l.label) + "</p>";
                     html += "<p><b>cost</b>: " + l.cost + "</p>";
                 if(l.properties) {
                     for(var key in l.properties) {
@@ -372,9 +373,13 @@
 
                 force.nodes(nodes).links(links).start();
 
-                var link = panner.selectAll(".link")
-                                 .data(links)
-                                 .enter().append("line")
+              link_groups = panner.selectAll(".node_link")
+                               .data(links)
+                               .enter()
+                               .append("g")
+                               .attr("class", "link");
+
+                var link = link_groups.append("line")
                                  .attr("class", function (link) {
                                      var baseClass = "njg-link",
                                          addClass = null;
@@ -394,13 +399,33 @@
                                      }
                                      return baseClass;
                                  })
-                                 .on("click", opts.onClickLink),
+                                 .on("click", opts.onClickLink);
+
+                var linkLabel = link_groups.append("text")
+                                   .attr("class", "linkLabel njg-tooltip")
+                                   .attr("dy", 12)
+                                   .text(function (l) {
+                                      return l.label;
+                                    })
+
+
+
                     groups = panner.selectAll(".node")
                                    .data(nodes)
                                    .enter()
                                    .append("g");
                     node = groups.append("circle")
                                  .attr("class", function (node) {
+                                   // Stroke vom node bunt 
+                                   if ( node.properties.port_state == "up") {
+                                       var addcolorClass = "class_green";
+                                   }
+                                   else if (node.properties.port_state  == "down") {
+                                       var addcolorClass= "class_red";
+                                   } else {
+                                       var addcolorClass = "";
+                                   }
+
                                      var baseClass = "njg-node",
                                          addClass = null;
                                          value = node.properties && node.properties[opts.nodeClassProperty];
@@ -415,9 +440,9 @@
                                          else if (value === true) {
                                              addClass = opts.nodeClassProperty;
                                          }
-                                         return baseClass + " " + addClass;
+                                         return baseClass + " " + addClass + " " + addcolorClass;
                                      }
-                                     return baseClass;
+                                     return baseClass + " " + addcolorClass;
                                  })
                                  .attr("r", opts.circleRadius)
                                  .on("click", opts.onClickNode)
@@ -427,7 +452,57 @@
                                        .text(function(n){ return n.label || n.id })
                                        .attr('dx', opts.labelDx)
                                        .attr('dy', opts.labelDy)
-                                       .attr('class', 'njg-tooltip');
+                                       .attr('class', 'njg-tooltip node_titel')
+
+                    var labels_if = groups.append('text')
+                                       .text(function(n){ return n.properties.interface })
+                                       .attr('dx', opts.labelDx)
+                                       .attr('dy', opts.labelDy)
+                                       .attr('class', 'njg-tooltip node_titel_klein')
+
+                    var labels_port_state = groups.append('text')
+                                       .text(function(n) {
+                                               return n.properties.port_state
+                                            })
+                                       .attr('dx', opts.labelDx)
+                                       .attr('dy', opts.labelDy)
+                                       .attr('class', function(n) {
+
+                                               if ( n.properties.port_state == "up") {
+                                                   var format_portstate = "green";
+                                               }
+                                               else if (n.properties.port_state  == "down") {
+                                                   var format_portstate = "red";
+                                               } else {
+                                                   var format_portstate = "";
+                                               }
+                                                 return "njg-tooltip node_titel_klein " + format_portstate;
+
+                                            });
+
+
+
+
+                  var labels_L2_protocol_state = groups.append('text')
+                                       .text(function(n) {
+                                               return n.properties.port_state
+                                            })
+                                       .attr('dx', opts.labelDx)
+                                       .attr('dy', opts.labelDy)
+                                       .attr('class', function(n) {
+                                            console.log(n.properties.L2_protocol_state )
+                                               if ( n.properties.L2_protocol_state == "up") {
+                                                   var format_L2_protocol_state = "green";
+                                               }
+                                               else if (n.properties.L2_protocol_state  == "down") {
+                                                   var format_L2_protocol_state = "red";
+                                               } else {
+                                                   var format_L2_protocol_state = "";
+                                               }
+                                                 return "njg-tooltip node_titel_klein " + format_L2_protocol_state;
+                                            });
+
+
 
                 // Close overlay
                 closeOverlay.on("click", function() {
@@ -509,6 +584,25 @@
                     labels.attr("transform", function(d) {
                         return "translate(" + d.x + "," + d.y + ")";
                     });
+
+                    labels_if.attr("transform", function(d) {
+                        return "translate(" + d.x + "," + (d.y - 6) + ")";
+                    });
+
+                    labels_port_state.attr("transform", function(d) {
+                        return "translate(" + (d.x - 10) + "," + d.y  + ")";
+                    });
+
+                    labels_L2_protocol_state.attr("transform", function(d) {
+                        return "translate(" + (d.x + 10) + "," + d.y + ")";
+                    });
+
+                    linkLabel.attr("transform", function (d) { //calcul de l'angle du label
+                    var angle = Math.atan((d.source.y - d.target.y) / (d.source.x - d.target.x)) * 180 / Math.PI;
+                    return 'translate(' + [((d.source.x + d.target.x) / 2), ((d.source.y + d.target.y) / 2)] + ')rotate(' + angle + ')';
+                });
+
+
                 })
                 .on("end", function(){
                     force.stop();

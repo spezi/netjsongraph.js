@@ -1,0 +1,64 @@
+{
+    "type": "NetworkGraph",
+    "label": "Custom Attributes Example",
+    "protocol": "OLSR",
+    "version": "0.6.6.2",
+    "revision": "6ec73b8f5213cc740816f2fd2ff93108",
+    "metric": "ETX",
+    "router_id": "172.16.146.6",
+    "nodes": [
+        {
+            "id": "172.16.146.99",
+            "label": "vie-sa5",
+            "properties": {
+                "hostname": "NAS.nnx",
+                "gateway": false,
+                "interface": "et-1/1/5",
+                "interface_state": "up up",
+                "port_state": "up",
+                "L2_protocol_state" : "up",
+                "protocols" : {
+                    "isis": true,
+                    "pim": true,
+                    "bgp": true
+                }
+            }
+        },
+        {
+            "id": "172.16.146.7",
+            "label": "m-sb21",
+            "local_addresses": [
+                "10.40.0.129",
+                "10.40.0.130",
+                "10.40.0.131"
+            ],
+            "properties": {
+                "hostname": "nemesis.nnx",
+                "interface": "et-6/4/5",
+                "interface_state": "up up",
+                "port_state": "down",
+                "L2_protocol_state" : "down",
+                "protocols" : {
+                    "isis": true,
+                    "pim": true,
+                    "bgp": true
+                }
+            }
+        }
+    ],
+    "links": [
+        {
+            "source": "172.16.146.99",
+            "target": "172.16.146.7",
+            "label": "0b1/690000/7Y27/1095644/7Y23/23",
+            "cost": 1.2939453125,
+            "properties": {
+                "lq": 0.900,
+                "nlq": 0.497,
+                "bitrate": "20 mbit/s",
+                "state": "up up",
+                "type": "fiber"
+            }
+        }
+    ]
+}
